@@ -14,33 +14,43 @@ terraform {
 module "main" {
   source = "../.."
 
-  name = "ABC"
+  name = "UG1"
 }
 
-data "aci_rest" "fvTenant" {
-  dn = "uni/tn-ABC"
+data "aci_rest" "firmwareFwGrp" {
+  dn = "uni/fabric/fwgrp-${module.main.name}"
 
   depends_on = [module.main]
 }
 
-resource "test_assertions" "fvTenant" {
-  component = "fvTenant"
+resource "test_assertions" "firmwareFwGrp" {
+  component = "firmwareFwGrp"
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.fvTenant.content.name
-    want        = "ABC"
+    got         = data.aci_rest.firmwareFwGrp.content.name
+    want        = module.main.name
   }
 
-  equal "nameAlias" {
-    description = "nameAlias"
-    got         = data.aci_rest.fvTenant.content.nameAlias
-    want        = ""
+  equal "type" {
+    description = "type"
+    got         = data.aci_rest.firmwareFwGrp.content.type
+    want        = "range"
   }
+}
 
-  equal "descr" {
-    description = "descr"
-    got         = data.aci_rest.fvTenant.content.descr
-    want        = ""
+data "aci_rest" "firmwareFwP" {
+  dn = "uni/fabric/fwpol-${module.main.name}"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "firmwareFwP" {
+  component = "firmwareFwP"
+
+  equal "name" {
+    description = "name"
+    got         = data.aci_rest.firmwareFwP.content.name
+    want        = module.main.name
   }
 }
