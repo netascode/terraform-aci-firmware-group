@@ -13,7 +13,8 @@ Note that this example will create resources. Resources can be destroyed with `t
 
 ```hcl
 module "aci_firmware_group" {
-  source = "netascode/firmware-group/aci"
+  source  = "netascode/firmware-group/aci"
+  version = ">= 0.0.1"
 
   name     = "UG1"
   node_ids = [101, 103]
