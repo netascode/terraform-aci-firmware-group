@@ -16,7 +16,7 @@ resource "aci_rest" "firmwareFwGrp" {
 }
 
 resource "aci_rest" "firmwareRsFwgrpp" {
-  dn         = "${aci_rest.firmwareFwGrp.id}/rsfwgrpp"
+  dn         = "${aci_rest.firmwareFwGrp.dn}/rsfwgrpp"
   class_name = "firmwareRsFwgrpp"
   content = {
     tnFirmwareFwPName = var.name
@@ -25,7 +25,7 @@ resource "aci_rest" "firmwareRsFwgrpp" {
 
 resource "aci_rest" "fabricNodeBlk" {
   for_each   = toset([for id in var.node_ids : tostring(id)])
-  dn         = "${aci_rest.firmwareFwGrp.id}/nodeblk-${each.value}"
+  dn         = "${aci_rest.firmwareFwGrp.dn}/nodeblk-${each.value}"
   class_name = "fabricNodeBlk"
   content = {
     name  = each.value
