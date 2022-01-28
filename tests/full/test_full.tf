@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -18,7 +18,7 @@ module "main" {
   node_ids = [101]
 }
 
-data "aci_rest" "firmwareFwGrp" {
+data "aci_rest_managed" "firmwareFwGrp" {
   dn = "uni/fabric/fwgrp-${module.main.name}"
 
   depends_on = [module.main]
@@ -29,18 +29,18 @@ resource "test_assertions" "firmwareFwGrp" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.firmwareFwGrp.content.name
+    got         = data.aci_rest_managed.firmwareFwGrp.content.name
     want        = module.main.name
   }
 
   equal "type" {
     description = "type"
-    got         = data.aci_rest.firmwareFwGrp.content.type
+    got         = data.aci_rest_managed.firmwareFwGrp.content.type
     want        = "range"
   }
 }
 
-data "aci_rest" "firmwareFwP" {
+data "aci_rest_managed" "firmwareFwP" {
   dn = "uni/fabric/fwpol-${module.main.name}"
 
   depends_on = [module.main]
@@ -51,13 +51,13 @@ resource "test_assertions" "firmwareFwP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.firmwareFwP.content.name
+    got         = data.aci_rest_managed.firmwareFwP.content.name
     want        = module.main.name
   }
 }
 
-data "aci_rest" "firmwareRsFwgrpp" {
-  dn = "${data.aci_rest.firmwareFwGrp.id}/rsfwgrpp"
+data "aci_rest_managed" "firmwareRsFwgrpp" {
+  dn = "${data.aci_rest_managed.firmwareFwGrp.id}/rsfwgrpp"
 
   depends_on = [module.main]
 }
@@ -67,13 +67,13 @@ resource "test_assertions" "firmwareRsFwgrpp" {
 
   equal "tnFirmwareFwPName" {
     description = "tnFirmwareFwPName"
-    got         = data.aci_rest.firmwareRsFwgrpp.content.tnFirmwareFwPName
+    got         = data.aci_rest_managed.firmwareRsFwgrpp.content.tnFirmwareFwPName
     want        = module.main.name
   }
 }
 
-data "aci_rest" "fabricNodeBlk" {
-  dn = "${data.aci_rest.firmwareFwGrp.id}/nodeblk-101"
+data "aci_rest_managed" "fabricNodeBlk" {
+  dn = "${data.aci_rest_managed.firmwareFwGrp.id}/nodeblk-101"
 
   depends_on = [module.main]
 }
@@ -83,19 +83,19 @@ resource "test_assertions" "fabricNodeBlk" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.fabricNodeBlk.content.name
+    got         = data.aci_rest_managed.fabricNodeBlk.content.name
     want        = "101"
   }
 
   equal "from_" {
     description = "from_"
-    got         = data.aci_rest.fabricNodeBlk.content.from_
+    got         = data.aci_rest_managed.fabricNodeBlk.content.from_
     want        = "101"
   }
 
   equal "to_" {
     description = "to_"
-    got         = data.aci_rest.fabricNodeBlk.content.to_
+    got         = data.aci_rest_managed.fabricNodeBlk.content.to_
     want        = "101"
   }
 }

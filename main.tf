@@ -1,4 +1,4 @@
-resource "aci_rest" "firmwareFwP" {
+resource "aci_rest_managed" "firmwareFwP" {
   dn         = "uni/fabric/fwpol-${var.name}"
   class_name = "firmwareFwP"
   content = {
@@ -6,7 +6,7 @@ resource "aci_rest" "firmwareFwP" {
   }
 }
 
-resource "aci_rest" "firmwareFwGrp" {
+resource "aci_rest_managed" "firmwareFwGrp" {
   dn         = "uni/fabric/fwgrp-${var.name}"
   class_name = "firmwareFwGrp"
   content = {
@@ -15,17 +15,17 @@ resource "aci_rest" "firmwareFwGrp" {
   }
 }
 
-resource "aci_rest" "firmwareRsFwgrpp" {
-  dn         = "${aci_rest.firmwareFwGrp.dn}/rsfwgrpp"
+resource "aci_rest_managed" "firmwareRsFwgrpp" {
+  dn         = "${aci_rest_managed.firmwareFwGrp.dn}/rsfwgrpp"
   class_name = "firmwareRsFwgrpp"
   content = {
     tnFirmwareFwPName = var.name
   }
 }
 
-resource "aci_rest" "fabricNodeBlk" {
+resource "aci_rest_managed" "fabricNodeBlk" {
   for_each   = toset([for id in var.node_ids : tostring(id)])
-  dn         = "${aci_rest.firmwareFwGrp.dn}/nodeblk-${each.value}"
+  dn         = "${aci_rest_managed.firmwareFwGrp.dn}/nodeblk-${each.value}"
   class_name = "fabricNodeBlk"
   content = {
     name  = each.value
